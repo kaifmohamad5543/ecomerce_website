@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecommerce_website</title>
+    <!-- link to css -->
+    <link rel="stylesheet" href="css/style">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400&display=swap');
+
+        * {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            scroll-padding-top: 2rem;
+            scroll-behavior: smooth;
+            box-sizing: border-box;
+            list-style: none;
+            text-decoration: none;
+        }
+
+        :root {
+            --main-color: #fd4646;
+            --text-color: #02ac70;
+            --bg-color: #fff;
+            --container-color: #1e1e2a;
+        }
+
+        img {
+            width: 100%;
+        }
+
+        body {
+            color: var(--bg-color);
+            background-color: var(--container-color);
+        }
+
+        section {
+            padding: 4rem 0 3rem;
+        }
+
+        .container {
+            max-width: 1068px;
+            margin: auto;
+            width: 100%;
+        }
+
+        /* header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--container-color);
+            box-shadow: 0 1px 4px hsla(0, 0%, 98%, 0.1);
+            z-index: 100;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            color: var(--bg-color);
+            font-weight: 600;
+        }
+
+        #cart-icon {
+            position: relative;
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        #cart-icon[data-quantity="0"]::after {
+            contain: '';
+        }
+
+        #cart-icon[data-quantity]::after {
+            content:attr(data-quantity
+            );
+            position: absolute;
+            top: 0;
+            right: -12px;
+            width: 20px;
+            height: 20px;
+            background-color: var(--text-color);
+            border-radius: 50%;
+            color: wheat;
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        /* cart */
+        .cart {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 360px;
+            min-height: 100vh;
+            padding: 20px;
+            background: black;
+            box-shadow: -2px 0 4px hsla(0, 71%, 12%, 0.1);
+            transition: 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+
+        .cart.active {
+            right: 0;
+            transition: 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+
+        .cart-tittle {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2rem;
+        }
+
+        /* total */
+        .total {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+            border-top: 1px solid var(--text-color);
+
+        }
+
+        .total-tittle {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .total-price {
+            font-size: 1.075rem;
+            margin: 1rem 0 0 0.7rem;
+
+        }
+
+        .btn-buy {
+            display: flex;
+            justify-content: center;
+            margin: 1.5rem auto 0 auto;
+            padding: 8px 19px;
+            width: 41%;
+            text-align: center;
+            border: none;
+            border-radius: 3rem;
+            background: var(--text-color);
+            color: var(--bg-color);
+            font-size: 1rem;
+            font-style: italic;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        #close-cart {
+            position: absolute;
+            top: 1rem;
+            right: 0.8rem;
+            font-size: 2rem;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .cart-box {
+            display: grid;
+            grid-template-columns: 32% 50% 18%;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+
+        }
+
+        .cart-img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            object-position: center;
+            padding: 10px;
+        }
+
+        .detail-box {
+            display: grid;
+            row-gap: 0.5rem;
+        }
+
+        .cart-product-tittle {
+            font-size: 1rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .cart-price {
+            font-weight: 500;
+        }
+
+        .cart-quantity {
+            border: 1px solid var(--text-color);
+            outline-color: var(--main-color);
+            width: 2.8rem;
+            text-align: center;
+            font-size: 1rem;
+            border-radius: 4px;
+
+        }
+
+        .cart-remove {
+            font-size: 24px;
+            color: var(--main-color);
+            cursor: pointer;
+        }
+
+        .section-tittle {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1.8rem;
+
+        }
+
+        .shop {
+            margin-top: 2rem;
+        }
+
+        .shop-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, auto));
+            gap: 1.5rem;
+        }
+
+        .product-box {
+            position: relative;
+            background: #2d2e37;
+            padding: 10px;
+            border-radius: 5px;
+            transition: 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+
+        .product-box:hover {
+            background: var(--bg-color);
+            border: 1px solid #f0f0f0;
+            box-shadow: 0 8px 32px hsla(0.75, 0.82, 0.162, 1);
+            transition: 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+
+        .product-img {
+            width: 90%;
+            height: auto;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-tittle {
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+
+        }
+
+        .price {
+            font-weight: 500;
+
+        }
+
+        .add-cart {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: var(--text-color);
+            color: var(--bg-color);
+            padding: 10px;
+            font-size: 1.2rem;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .add-cart:hover {
+            background: hsl(249, 32%, 17%);
+        }
+
+        /* making a responsive website */
+        @media(max-width:1080px) {
+            .nav {
+                padding: 14px 0;
+            }
+
+            section {
+                padding: 3rem 0 2rem;
+            }
+
+            .container {
+                margin: 0 auto;
+                width: 90%;
+
+            }
+
+            .shop {
+                margin-top: 2rem !important;
+            }
+        }
+
+        @media(max-width:400px) {
+            .nav {
+                padding: 12px 0;
+
+            }
+
+            .logo {
+                font-size: 1rem;
+            }
+
+            .cart {
+                width: 320px;
+            }
+        }
+
+        @media(max-width:360px) {
+
+            .cart {
+                width: 100%;
+            }
+
+            .shop {
+                margin-top: 1rem !important;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- navbarr -->
+    <header>
+        <!-- nav -->
+        <div class=" nav container">
+            <!-- logo -->
+            <a href="#" class="logo">Ecommerce</a>
+            <!-- cart icon -->
+            <i class="bx bx-shopping-bag" id="cart-icon" data-quantity="0"> </i>
+            <!-- this is a cart tittle -->
+            <div class="cart">
+                <h2 class="cart-tittle">your chart</h2>
+                <!-- cart container -->
+                <div class="cart-container"></div>
+
+
+                <!-- total -->
+                <div class="total">
+                    <div class="total-tittle">total</div>
+                    <div class="total-price">$0</div>
+                </div>
+                <!-- buy buttons -->
+                <button type="button" class="btn-buy">pay now</button>
+                <!-- close cart -->
+                <i class='bx bx-x' id="close-cart"></i>
+            </div>
+        </div>
+    </header>
+    <!-- product avialabe -->
+    <section class="shop container">
+        <!-- THIS IS A SECOND TITTLE -->
+        <h2 class="section-tittle">Shop Product</h2>
+        <!-- shop content -->
+        <div class="shop-content">
+            <!-- box-1 -->
+            <div class="product-box">
+                <!-- stripe needs image that are online on local server it will not show checkout page we have to upload online -->
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEidm6wE93UBhRYjefFZXJTeFcZQVLElNicKm8p73tJLmxs89GUp3qt8xmNhEzsb2DI0QBfJROK3Okq5J5Y1dV8DZ_ZtiBpNB5hQwU22rMSBE33ZNjz_ztNnQhBk_7J3v82vY9vZOgnRKwYiAICgvlAeROqUjv2wZorl-__Ebra274lBU5QVD4bPBbxa/s840/product1.jpeg"
+                    alt="" class="product-img">
+                <!-- this is a proct downward name i have the writtern -->
+                <h2 class="product-tittle">ADICOLOR SEASONAL</h2>
+                <span class="price">$50.056</span>
+                <i class="bx bx-shopping-bag add-cart"></i>
+            </div>
+            <!-- box-2 -->
+            <div class="product-box">
+                <!-- stripe needs image that are online on local server it will not show checkout page we have to upload online -->
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiYHtp0pA-PQqVPj_v7wsSz3mBs8V1hudWI1ITIBe7SYUFu0mykkz3ZdyTxZ4R1aJqj-1QZgvl_YjNSsy7TSazldrKt1GhjDMzD4B7ppHxwlg4Ye_K5RuOATxoqOTpMdn0DlGLVYOqGtE1uvcH0-ZWbi2hMgueWv3OkGCRL7ag5cJ2K0eRg4bU-CShj/s840/product2.jpeg"
+                    alt="" class="product-img">
+                <!-- this is a proct downward name i have the writtern -->
+                <h2 class="product-tittle">SATURDAY PACKBAG</h2>
+                <span class="price">$50</span>
+                <i class="bx bx-shopping-bag add-cart"></i>
+            </div>
+            <!-- box-3 -->
+            <div class="product-box">
+                <!-- stripe needs image that are online on local server it will not show checkout page we have to upload online -->
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjzDTEPDpNhMqrISAbAnRqjHhyt_eqntA67vJhMs9zzcTwiVs4LBkNlAy61MrzwcR-rFi67MxZtu8_2beCMaM1kcCruQQkjCG0NPwTJ9JepPiQ1M0IrB8Kzwmfk0gtU74spBuV6L830WXr32NUvObzXMP23Lo0MlTLf7EVPGvc1WsvrvCH2hIhoMefZ/s840/product3.jpeg"
+                    alt="" class="product-img">
+                <!-- this is a proct downward name i have the writtern -->
+                <h2 class="product-tittle">UNLIMATE HAT</h2>
+                <span class="price">$50</span>
+                <i class="bx bx-shopping-bag add-cart"></i>
+            </div>
+            <!-- box-4 -->
+            <div class="product-box">
+                <!-- stripe needs image that are online on local server it will not show checkout page we have to upload online -->
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEigDSxZsoY6RRw2fM33cvzGH7Sr7aUvr0fFQ8X9xENAXn76AENKB9_6D76CJBfmodywJdFl02PrzmlrW91QoWx9v41yrP9zxXSZvjp0TXGas777zgWd3gU01HzdnM-jdDbRaRv8D0AzjQS830ECEZoFPOJM6UYGDgqzw9kjoR5xFz56w5FfrX1Zid-a/s840/product4.jpeg"
+                    alt="" class="product-img">
+                <!-- this is a proct downward name i have the writtern -->
+                <h2 class="product-tittle">MESSI GOAT TREE</h2>
+                <span class="price">$50</span>
+                <i class="bx bx-shopping-bag add-cart"></i>
+            </div>
+            <!-- box-5 -->
+            <div class="product-box">
+                <!-- stripe needs image that are online on local server it will not show checkout page we have to upload online -->
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi0SN7vq0JRvbKqi1BX9zKOpSgbF8VfLmaPNIXF-sQQBk2OuKEQ60g56qLeCKUG3bHnGLedH18jcSvfeA9NNyJTnHikh6Fpwvx-mzmZGt2ip8_AsK4BepSetGteJDKnYMmAw-1QiL5Whdfs7HNasNujEBn7TMTlfTd9sT-213IDzKb9_cMXp4cs7YWT/s840/product5.jpeg"
+                    alt="" class="product-img">
+                <!-- this is a proct downward name i have the writtern -->
+                <h2 class="product-tittle">ADICOLOR HODDI</h2>
+                <span class="price">$50</span>
+                <i class="bx bx-shopping-bag add-cart"></i>
+            </div>
+            <!-- box-6 -->
+            <div class="product-box">
+                <!-- stripe needs image that are online on local server it will not show checkout page we have to upload online -->
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgysOGonP1wmkZ7CHVRxH5F_cJr8QYh7zz83IZ5vwFn4NnUcVWujzpS_ISWRxQRln7ZSzulp3_FjiSHOSyX-WyEsiuTjVG6dRfZS2mmqoeugdqLrD5bBQM6Xl_vpGsNigWf-Se63WtIJN6BU6kVP0fC700pUKFWfRzXvB_G0XkHy0TW27TJChCZWjuY/s840/product8.jpeg"
+                    alt="" class="product-img">
+                <!-- this is a proct downward name i have the writtern -->
+                <h2 class="product-tittle">ULTRABOST SHOES</h2>
+                <span class="price">$50</span>
+                <i class="bx bx-shopping-bag add-cart"></i>
+            </div>
+            <!-- box-7-->
+            <div class="product-box">
+                <!-- stripe needs image that are online on local server it will not show checkout page we have to upload online -->
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj88gicLH01HdhbyHCNzJQiHw6SKn_AQ21kyRg-3UxmHsFx2Vu9IRlPCz_-Nmp3gY-15io7RQ5QP4aSQkYmsEY5QjMux0_GZ1HppyreVchnIkLcj3kk3-QQpM8PTjaWkqBiA7ArXVKaou0N3pnlt-FguP6qaUKiosvx9yIM-4-zrTcn6Kajpg0iHS23/s840/product6.jpeg"
+                    alt="" class="product-img">
+                <!-- this is a proct downward name i have the writtern -->
+                <h2 class="product-tittle">ADIDDAS EARBUDS</h2>
+                <span class="price">$50</span>
+                <i class="bx bx-shopping-bag add-cart"></i>
+            </div>
+            <!-- box-8-->
+            <div class="product-box">
+                <!-- stripe needs image that are online on local server it will not show checkout page we have to upload online -->
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiwGFKHezoDvzfikgvtWC9vrzqLew-8qA6D9apLEYZ93k3o0jYrYyB7w1PkmVjb8Crb5PvLDhaIkBcmsCMC_6mh9lSwmbM4Uei7SqMY_rNryz6KGGCBgA4hhCfn38W46gNKVmZzBfJiwjDB7uIjimNgSYK8mRcEaoy7m8EGgb9MUs9BDrkTXOLiOchL/s840/product7.jpeg"
+                    alt="" class="product-img">
+                <!-- this is a proct downward name i have the writtern -->
+                <h2 class="product-tittle">METAL BOTTLE</h2>
+                <span class="price">$50</span>
+                <i class="bx bx-shopping-bag add-cart"></i>
+            </div>
+
+        </div>
+    </section>
+    <script>
+        let cartIcon = document.querySelector('#cart-icon ');
+        let cart = document.querySelector('.cart');
+        let closeCart = document.querySelector('#close-cart');
+        // open cart
+
+        cartIcon.onclick = () => {
+            cart.classList.add("active");
+        };
+
+        //   close cart
+        closeCart.onclick = () => {
+            cart.classList.remove("active");
+        };
+        // making add to cart
+        // cart working with js
+        if (document.readyState == 'loading') {
+            document.addEventListener('DOMContentLoaded', ready);
+        }
+        else {
+            ready();
+        }
+        // making the function
+        function ready() {
+            var removeCartButtons = document.getElementsByClassName('cart-remove');
+            for (var i = 0; i < removeCartButtons.length; i++) {
+                var button = removeCartButtons[i];
+                button.addEventListener("click", removeCartIteam);
+            }
+
+            // quantity change
+            var quantityInputs = document.getElementsByClassName('cart-quantity');
+            for (var i = 0; i < quantityInputs.length; i++) {
+                var input = quantityInputs[i];
+                input.addEventListener("change", quantityChanged);
+            }
+            // add to cart
+            var addCart = document.getElementsByClassName('add-cart');
+            for (var i = 0; i < addCart.length; i++) {
+                var button = addCart[i];
+                button.addEventListener("click", addCartClicked);
+
+            }
+            loadCartItems();
+        }
+
+        // remove the cart iteam
+        function removeCartIteam(event) {
+            var buttonClicked = event.target;
+            buttonClicked.parentElement.remove();
+            updateTotal();
+            saveCartItems();
+
+            saveCartItems();
+        }
+        //    quantity changed
+        function quantityChanged(event) {
+            var input = event.target;
+            if (isNaN(input.value) || input.value <= 0) {
+                input.value = 0;
+            }
+            updateTotal();
+            saveCartItems();
+
+
+        }
+
+        // add cart function
+        function addCartClicked(event) {
+            var button = event.target;
+            var shopProducts = button.parentElement;
+            var title = shopProducts.getElementsByClassName("product-tittle")[0].innerText;
+            var price = shopProducts.getElementsByClassName("price")[0].innerText;
+            var productImg = shopProducts.getElementsByClassName("product-img")[0].src;
+            addProductToCart(title, price, productImg);
+            updateTotal();
+            saveCartItems();
+            saveCartItems();
+
+
+
+
+        }
+
+        function addProductToCart(title, price, productImg) {
+            var cartShopBox = document.createElement('div');
+            cartShopBox.classList.add('cart-box');
+            var cartItems = document.getElementsByClassName('cart-container')[0];
+            var cartItemsNames = cartItems.getElementsByClassName('cart-product-tittle');
+            for (var i = 0; i < cartItemsNames.length; i++) {
+                if (cartItemsNames[i].innerText == title) {
+                    alert('you have already added this item to cart');
+                    return;
+                }
+
+            }
+
+            var cartBoxContent = ` 
+            <img src="${productImg}" alt="" class="cart-img" />
+                        
+                        <div class="detail-box">
+                            <div class="cart-product-tittle">${title}</div>
+                            <div class="cart-price">${price}</div>
+                            <input type="number" name="" id="" value="1" class="cart-quantity" />
+                        </div>
+                        <!-- remove Iteam -->
+                        <i class="bx bx-trash-alt cart-remove"></i>`;
+            cartShopBox.innerHTML = cartBoxContent;
+            cartItems.append(cartShopBox);
+            cartShopBox
+                .getElementsByClassName('cart-remove')[0]
+                .addEventListener('click', removeCartIteam);
+
+            cartShopBox
+                .getElementsByClassName('cart-quantity')[0]
+                .addEventListener('change', quantityChanged);
+            saveCartItems();
+            updateCartIcon();
+        }
+
+
+
+        function updateTotal() {
+            var cartContent = document.getElementsByClassName("cart-container")[0];
+            var cartBoxes = cartContent.getElementsByClassName("cart-box");
+            var total = 0;
+            for (var i = 0; i < cartBoxes.length; i++) {
+                var cartBox = cartBoxes[i];
+                var priceElement = cartBox.getElementsByClassName("cart-price")[0];
+                var quantityElement = cartBox.getElementsByClassName("cart-quantity")[0];
+                var price = parseFloat(priceElement.innerText.replace("$", ""));
+                var quantity = quantityElement.value;
+                total += price * quantity;
+            }
+
+            total = Math.round(total * 100) / 100;
+            document.getElementsByClassName("total-price")[0].innerHTML = "$" + total;
+            // save total to local stroge
+            localStorage.setItem("cartTotal", total);
+
+        }
+
+        // keep item in cart when page refresh with localStorage
+        function saveCartItems() {
+            var cartContent = document.getElementsByClassName('cart-container')[0];
+            var cartBoxes = cartContent.getElementsByClassName('cart-box');
+            var cartItems = [];
+
+            for (var i = 0; i < cartBoxes.length; i++) {
+                cartBox = cartBoxes[i];
+                var titleElement = cartBox.getElementsByClassName('cart-product-tittle')[0];
+                var priceElement = cart.getElementsByClassName('cart-price')[0];
+                var quantityElement = cartBox.getElementsByClassName('cart-quantity')[0];
+                var productImg = cartBox.getElementsByClassName('cart-img')[0].src;
+
+
+                var item = {
+
+                    title: titleElement.innerText,
+                    price: priceElement.innerText,
+                    quantity: quantityElement.value,
+                    productImg: productImg,
+                };
+                cartItems.push(item);
+            }
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        }
+        //   load in cart
+
+        function loadCartItems() {
+            var cartItems = localStorage.getItem('cartItems');
+            if (cartItems) {
+                cartItems = JSON.parse(cartItems);
+
+
+                for (var i = 0; i < cartItems.length; i++) {
+                    var item = cartItems[i];
+                    addProductToCart(item.title, item.price, item.productImg);
+
+                    var cartBoxes = document.getElementsByClassName("cart-box");
+                    var cartBox = cartBoxes[cartBoxes.length - 1];
+                    var quantityElement = cartBox.getElementsByClassName("cart-quantity")[0];
+                    quantityElement.value = item.quantity;
+
+
+                }
+            }
+            var cartTotal = localStorage.getItem("cartTotal");
+            if (cartTotal) {
+                document.getElementsByClassName("total-price")[0].innerText =
+                    "$" + cartTotal;
+            }
+            updateCartIcon();
+        }
+
+        // quantity in cart icons
+        function updateCartIcon() {
+            var cartBoxes = document.getElementsByClassName("cart-box");
+            var quantity = 0;
+
+            for (var i = 0; i < cartBoxes.length; i++) {
+                var cartBox = cartBoxes[i];
+                var quantityElement = cartBox.getElementsByClassName("cart-quantity")[0];
+                quantity += parseInt(quantityElement.value);
+            }
+            var cartIcon = document.querySelector("#cart-icon");
+            cartIcon.setAttribute("data-quantity", quantity);
+
+        }
+
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>
